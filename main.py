@@ -25,23 +25,29 @@ def select_word():
     target_words_contents = load_files()[0]
     word = random.choice(target_words_contents)
     print(word)
+    
+    return word
 
-def algorithm():
+def algorithm(user_word):
     # Add your implementation of the algorithm here
-    pass
+
+    if user_word == WORD:
+
+        print("You Win!!!")
+    
 
 def user_input():
-    user_input = input("Enter a 5-letter word: ")
+    user_word = input("Enter a 5-letter word: ")
 
-    if len(user_input) != 5:
+    if len(user_word) != 5:
         print("Maximum of 5 letters. Try again.")
         user_input()
 
     valid_words_contents = load_files()[1]
-    if user_input in valid_words_contents:
-        algorithm()
-        return user_input
+    if user_word in valid_words_contents:
+        algorithm(user_word)
+        
     else:
         print("-1")
-select_word()   # Call select_word() function to print a random word
+WORD = select_word()   # Call select_word() function to print a random word
 user_input()
