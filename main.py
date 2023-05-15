@@ -7,39 +7,41 @@ VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')
 
 MAX_TRIES = 6
 
-def files():
-    if os.path.exists(TARGET_WORDS):
+def load_files():
+    target_words_contents = []
+    valid_words_contents = []
+
+    if TARGET_WORDS.exists():
         with open(TARGET_WORDS, "r") as words:
             target_words_contents = words.read().splitlines()
 
-
-    if os.path.exists(VALID_WORDS):
+    if VALID_WORDS.exists():
         with open(VALID_WORDS, "r") as valid_words:
             valid_words_contents = valid_words.read().splitlines()
 
-    return(target_words_contents, valid_words_contents)
-def selectword():
+    return target_words_contents, valid_words_contents
 
-    word = str(random.choice(files()[0]))
+def select_word():
+    target_words_contents = load_files()[0]
+    word = random.choice(target_words_contents)
     print(word)
-selectword()
 
 def algorithm():
+    # Add your implementation of the algorithm here
+    pass
 
-    print(comments)
+def user_input():
+    user_input = input("Enter a 5-letter word: ")
 
-def userinput():
+    if len(user_input) != 5:
+        print("Maximum of 5 letters. Try again.")
+        user_input()
 
-    user_input = str(input("Enter a 5 letter word: "))
-
-    if len(user_input) >> 5:
-        print("Maxium of 5 letters try again.")
-        userinput()
-    elif user_input in files()[1]:
+    valid_words_contents = load_files()[1]
+    if user_input in valid_words_contents:
         algorithm()
-        return(user_input)
+        return user_input
     else:
         print("-1")
-    
-userinput()
 
+user_input()
