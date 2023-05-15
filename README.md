@@ -48,6 +48,9 @@ import os
 import pathlib
 import random
 
+TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')
+VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')
+
 def files():
     if os.path.exists(TARGET_WORDS):
         with open(TARGET_WORDS, "r") as words:
