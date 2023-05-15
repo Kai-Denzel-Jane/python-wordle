@@ -43,5 +43,5 @@ def user_input():
         return user_input
     else:
         print("-1")
-
+select_word()   # Call select_word() function to print a random word
 user_input()
