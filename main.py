@@ -57,6 +57,8 @@ def algorithm(user_word, word, tries):
 
     if user_word == word:
         print(Fore.GREEN + "You win")
+    elif tries == 1:
+        print("You won with one try remainding that was close")
     else:
         tries -= 1  # Decrease the tries counter
         if tries > 0:
@@ -65,7 +67,6 @@ def algorithm(user_word, word, tries):
             user_input(word, cheat, tries)  # Pass the updated tries value
         else:
             print(Fore.RED + "You lose")
-
 
 
 def user_input(word, cheat, tries=MAX_TRIES):
@@ -106,8 +107,6 @@ credits = """
     Current Release: 1.0.0
     Packages used: colorama
 """
-
-continue_debug = True  # Variable to track if the game should continue
 
 konami_code = b'VVAgVVAgRE9XTiBET1dOIExFRlQgUklHSFQgTEVGVCBSSUdIVCBCIEE='
 secret = base64.b64decode(konami_code)
