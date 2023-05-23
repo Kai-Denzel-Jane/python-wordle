@@ -2,6 +2,7 @@ import random
 import pathlib
 import debug_module
 import instructions
+import base64
 from colorama import Fore, Back, Style
 
 instructions.dependencies()
@@ -17,15 +18,12 @@ def welcome():
     print(Style.RESET_ALL)
 
     choice = int(input("Input number: "))
-
     return choice
-
 
 TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')
 VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')
 
 MAX_TRIES = 6
-
 
 def load_files():
     # Load the contents of the target words and valid words files
@@ -42,16 +40,16 @@ def load_files():
 
     return target_words_contents, valid_words_contents
 
-
 def select_word():
     # Select a random word from the target words
     target_words_contents = load_files()[0]
     word = random.choice(target_words_contents)
     return word
 
-
 def algorithm(user_word, word):
     # Perform the comparison and print the results with font colors
+    tries = MAX_TRIES
+
     for letter in user_word:
         if letter not in word:
             print(Fore.RED + letter, "-")
@@ -63,16 +61,21 @@ def algorithm(user_word, word):
     if user_word == word:
         print(Fore.GREEN + "You win")
     else:
-        if MAX_TRIES > 0:
+        if tries > 0:
             print(Fore.YELLOW + "Try again")
+            tries -= 1
+            print(tries, "Tries remaining")
             user_input(word)
         else:
             print(Fore.RED + "You lose")
 
-
 def user_input(word):
     # Prompt the user to enter a word and validate it
+    if cheat:
+        print(word, "What's the fun in this")
+
     user_word = input(Fore.CYAN + "Enter a 5-letter word: " + Style.RESET_ALL)
+    user_word = user_word.lower()  # Convert to lowercase
 
     if len(user_word) != 5:
         print(Fore.RED + "Must be 5 letters. Try again.")
@@ -85,19 +88,16 @@ def user_input(word):
         print(Fore.RED + "That word does not exist. Try again.")
         user_input(word)
 
-
 def end():
     # Prompt the user to end the program
     end = input(Fore.CYAN + "End [y/n]" + Style.RESET_ALL)
     if end.lower() == "yes" or end.lower() == "y":
         exit()
 
-
 def main():
     # Main game loop
-    word = select_word()  # Call select_word() function to print a random word
+    word = select_word()
     user_input(word)
-
     return word
 
 credits = """
@@ -106,6 +106,17 @@ credits = """
     Current Release: 1.0.0
     Packages used: colorama
 """
+
+continue_debug = True  # Variable to track if the game should continue
+
+konami_code = b'VVAgVVAgRE9XTiBET1dOIExFRlQgUklHSFQgTEVGVCBSSUdIVCBCIEE='
+secret = base64.b64decode(konami_code)
+
+def check_konami_code(input_sequence):
+    encoded_input = base64.b64encode(input_sequence.encode())
+    return encoded_input == konami_code
+
+cheat = False
 
 while True:
     # Main program loop
@@ -117,10 +128,19 @@ while True:
         case 2:
             instructions.show_instructions()
         case 3:
-            debug_module.debug(welcome)
+            continue_debug = debug_module.debug(welcome)
         case 4:
             print(Fore.YELLOW, credits)
+            credit_input = 'UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT B A'
+            if check_konami_code(credit_input):
+                cheat = True
+                print("Cheat Mode enabled. You're really cheating!")
+                welcome()
         case 5:
             SystemExit()
+            cheat = False
 
     end()
+
+    if KeyboardInterrupt:
+        cheat = False
