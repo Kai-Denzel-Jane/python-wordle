@@ -1,14 +1,20 @@
 import random
 import pathlib
-
 import debug_module
+import instructions
+from colorama import Fore, Back, Style
+
+instructions.dependencies()
 
 def welcome():
-    print("Eneter a number to start:")
+    # Display the welcome menu and prompt for user input
+    print(Fore.CYAN + "Enter a number to start:")
     print("1. Play the game")
     print("2. Instructions")
     print("3. Debug")
-    print("4. Exit")
+    print("4. Credits / Information")
+    print("5. Exit")
+    print(Style.RESET_ALL)
 
     choice = int(input("Input number: "))
 
@@ -20,10 +26,9 @@ VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')
 
 MAX_TRIES = 6
 
-def instructions():
-    print("Instructions:")
 
 def load_files():
+    # Load the contents of the target words and valid words files
     target_words_contents = []
     valid_words_contents = []
 
@@ -37,59 +42,85 @@ def load_files():
 
     return target_words_contents, valid_words_contents
 
+
 def select_word():
+    # Select a random word from the target words
     target_words_contents = load_files()[0]
     word = random.choice(target_words_contents)
-    print(word)
-    
     return word
 
-def algorithm(user_word):
-    # Add your implementation of the algorithm here
 
-    user_word = list(user_word)
-    
-    
+def algorithm(user_word, word):
+    # Perform the comparison and print the results with font colors
+    for letter in user_word:
+        if letter not in word:
+            print(Fore.RED + letter, "-")
+        elif letter in word and user_word.index(letter) != word.index(letter):
+            print(Fore.YELLOW + letter, "*")
+        elif user_word.index(letter) == word.index(letter):
+            print(Fore.GREEN + letter, "X")
 
-def user_input():
-    user_word = input("Enter a 5-letter word: ")
+    if user_word == word:
+        print(Fore.GREEN + "You win")
+    else:
+        if MAX_TRIES > 0:
+            print(Fore.YELLOW + "Try again")
+            user_input(word)
+        else:
+            print(Fore.RED + "You lose")
+
+
+def user_input(word):
+    # Prompt the user to enter a word and validate it
+    user_word = input(Fore.CYAN + "Enter a 5-letter word: " + Style.RESET_ALL)
 
     if len(user_word) != 5:
-        print("Must be 5 letters. Try again.")
-        user_input()
+        print(Fore.RED + "Must be 5 letters. Try again.")
+        user_input(word)
 
     valid_words_contents = load_files()[1]
     if user_word in valid_words_contents:
-        algorithm(user_word)
-        
+        algorithm(user_word, word)
     else:
-        print("That word does not exist. Try again.")
-        user_input()
+        print(Fore.RED + "That word does not exist. Try again.")
+        user_input(word)
+
 
 def end():
-
-    end = input("End [y/n]")
-    if end == "yes" or end == "y":
+    # Prompt the user to end the program
+    end = input(Fore.CYAN + "End [y/n]" + Style.RESET_ALL)
+    if end.lower() == "yes" or end.lower() == "y":
         exit()
 
+
 def main():
-    WORD = select_word()   # Call select_word() function to print a random word
-    user_input()
+    # Main game loop
+    word = select_word()  # Call select_word() function to print a random word
+    user_input(word)
+
+    return word
+
+credits = """
+    Main Developer: Kai Jane (kaijanedev@icloud.com)
+    Source code: https://github.com/Kai-Denzel-Jane/python-wordle/
+    Current Release: 1.0.0
+    Packages used: colorama
+"""
 
 while True:
-
+    # Main program loop
     choice = welcome()
 
     match choice:
-
         case 1:
             main()
         case 2:
-            instructions()
+            instructions.show_instructions()
         case 3:
-            debug_module.debug()
+            debug_module.debug(welcome)
         case 4:
-            exit()
+            print(Fore.YELLOW, credits)
+        case 5:
+            SystemExit()
 
-    end()   
-
+    end()

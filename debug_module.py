@@ -1,59 +1,81 @@
-# Debugging
-
 import platform
+from colorama import Fore, Style
 
 
-def debug():
+def get_release_version():
+    system = platform.system()
+    release = platform.release()
 
-    debug_info = list()
-    debug_info_available = list()
+    if system == "Darwin":
+        # macOS major release version
+        return f"macOS {release}"
+    elif system == "Linux":
+        # Linux distribution and major release version
+        with open("/etc/os-release", "r") as f:
+            lines = f.readlines()
+            distro = None
+            for line in lines:
+                if line.startswith("PRETTY_NAME="):
+                    distro = line.split("=")[1].strip().strip('"')
+                    break
+            if distro:
+                return f"{distro} {release}"
+            else:
+                return f"Linux {release}"
+    elif system == "Windows":
+        # Windows major release version
+        return f"Windows {release}"
+    else:
+        return "Unknown"
 
-    debug_info.append(f"Platform: {platform.platform()}"); debug_info_available.append(f"Platform")
-    debug_info.append(f"Python_Version: {platform.python_version()}"); debug_info_available.append(f"Python_Version")
-    debug_info.append(f"Python_Build: {platform.python_build()}"); debug_info_available.append(f"Python_Build")
-    debug_info.append(f"Python_Implementation: {platform.python_implementation()}"); debug_info_available.append(f"Python_Implementation")
-    debug_info.append(f"Python_Executable: {platform.python_compiler()}"); debug_info_available.append(f"Python_Executable")
-    debug_info.append(f"Architecture: {platform.architecture()}"); debug_info_available.append(f"Architecture")
-    debug_info.append(f"Processor: {platform.processor()}"); debug_info_available.append(f"Processor")
+def debug(welcome_func):
+    # Get debug information about the system
+    debug_info = [
+        f"Platform: {platform.platform()}",
+        f"Python_Version: {platform.python_version()}",
+        f"Python_Build: {platform.python_build()}",
+        f"Python_Implementation: {platform.python_implementation()}",
+        f"Python_Executable: {platform.python_compiler()}",
+        f"Release: {get_release_version()}",
+        f"Architecture: {platform.architecture()}",
+        f"Processor: {platform.processor()}",
+        f"Machine: {platform.machine()}",
+        f"System: {platform.system()}",
+    ]
 
-    get_platform = debug_info[0]
-    get_python_version = debug_info[1]
-    get_python_build = debug_info[2]
-    get_python_implementation = debug_info[3]
-    get_python_compiler = debug_info[4]
-    get_architecture = debug_info[5]
-    get_processor = debug_info[6]
+    # List of available debug information options
+    debug_info_available = [
+        "Platform",
+        "Python_Version",
+        "Python_Build",
+        "Python_Implementation",
+        "Python_Executable",
+        "Release",
+        "Architecture",
+        "Processor",
+        "Machine",
+        "System",
+    ]
 
+    # Prompt the user for debug information input
+    debug_info_input = input(Fore.CYAN + "What information do you want to see (? for list, BACK to go back): " + Style.RESET_ALL)
 
-    debug_info_input = str(input("What information you want to see (? for list, BACK to go back): "))
+    if debug_info_input == "?":
+        # Print the available debug information options
+        print(debug_info_available)
+        debug(welcome_func)
+    elif debug_info_input in debug_info_available:
+        # Display the selected debug information
+        index = debug_info_available.index(debug_info_input)
+        print(Fore.YELLOW + debug_info[index])
+    elif debug_info_input == "BACK":
+        # Go back to the welcome menu
+        welcome_func()
 
-    match debug_info_input:
-        case "?":
-            print(debug_info_available)
-            debug()
-        case "Platform":
-            print(get_platform)
-        case "Python_Version":
-            print(get_python_version)
-        case "Python_Build":
-            print(get_python_build)
-        case "Python_Implementation":
-            print(get_python_implementation)
-        case "Python_Executable":
-            print(get_python_compiler)
-        case "Architecture":
-            print(get_architecture)
-        case "Processor":
-            print(get_processor)
-        case "BACK":
-            import main
-            main.welcome()
-    
-    input_choice = str(input("Do you want to continue? (y/n): "))
+    # Prompt the user to continue or exit
+    input_choice = input(Fore.CYAN + "Do you want to continue? (y/n): " + Style.RESET_ALL)
 
-    match input_choice:
-        case "y":
-            debug()
-        case "n":
-            import main
-            main.welcome()
+    if input_choice == "y":
+        debug(welcome_func)
+    elif input_choice == "n":
+        welcome_func()
