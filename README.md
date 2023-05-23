@@ -8,7 +8,7 @@ The following file will contain documentation about this project.
 # Main Points
 
 ##  [Dependencies](./README.md#dependencies)
-##  [Usage](./README.md#usage) 
+##  [Usage](./Instructions.md) 
 ##  [Developer Info](./README.md#developer-info)
 
 ---
@@ -23,12 +23,6 @@ The following file will contain documentation about this project.
 
 ---
 
-## Usage
-
-### (Insert Instructions here).
-
----
-
 ## Developer Info
 
 ### Packages used:
@@ -38,6 +32,7 @@ The following file will contain documentation about this project.
     random (to get random strings)
     os (to check wether files are present)
     pathlib (had better experiences with this appose to a string path)
+    NEEDS TO CHANGE
 
 ### Functions / Methods
 
