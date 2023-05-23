@@ -76,6 +76,6 @@ def debug(welcome_func):
     input_choice = input(Fore.CYAN + "Do you want to continue? (y/n): " + Style.RESET_ALL)
 
     if input_choice == "y":
-        debug(welcome_func)
+        return debug(welcome_func)
     elif input_choice == "n":
-        welcome_func()
+        return False
