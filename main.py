@@ -7,7 +7,7 @@ from colorama import Fore, Back, Style
 
 instructions.dependencies()
 
-def welcome():
+def welcome(cheat):
     # Display the welcome menu and prompt for user input
     print(Fore.CYAN + "Enter a number to start:")
     print("1. Play the game")
@@ -46,10 +46,7 @@ def select_word():
     word = random.choice(target_words_contents)
     return word
 
-def algorithm(user_word, word):
-    # Perform the comparison and print the results with font colors
-    tries = MAX_TRIES
-
+def algorithm(user_word, word, tries):
     for letter in user_word:
         if letter not in word:
             print(Fore.RED + letter, "-")
@@ -61,32 +58,35 @@ def algorithm(user_word, word):
     if user_word == word:
         print(Fore.GREEN + "You win")
     else:
+        tries -= 1  # Decrease the tries counter
         if tries > 0:
             print(Fore.YELLOW + "Try again")
-            tries -= 1
             print(tries, "Tries remaining")
-            user_input(word)
+            user_input(word, cheat, tries)  # Pass the updated tries value
         else:
             print(Fore.RED + "You lose")
 
-def user_input(word):
-    # Prompt the user to enter a word and validate it
+
+
+def user_input(word, cheat, tries=MAX_TRIES):
     if cheat:
-        print(word, "What's the fun in this")
+        print("Word:", word)
+        print("What's the fun in this")
 
     user_word = input(Fore.CYAN + "Enter a 5-letter word: " + Style.RESET_ALL)
-    user_word = user_word.lower()  # Convert to lowercase
+    user_word = user_word.lower()
 
     if len(user_word) != 5:
         print(Fore.RED + "Must be 5 letters. Try again.")
-        user_input(word)
+        user_input(word, cheat, tries)  # Pass the tries value
 
     valid_words_contents = load_files()[1]
     if user_word in valid_words_contents:
-        algorithm(user_word, word)
+        algorithm(user_word, word, tries)  # Pass the tries value
     else:
         print(Fore.RED + "That word does not exist. Try again.")
-        user_input(word)
+        user_input(word, cheat, tries)  # Pass the tries value
+
 
 def end():
     # Prompt the user to end the program
@@ -97,7 +97,7 @@ def end():
 def main():
     # Main game loop
     word = select_word()
-    user_input(word)
+    user_input(word, cheat)
     return word
 
 credits = """
@@ -120,7 +120,7 @@ cheat = False
 
 while True:
     # Main program loop
-    choice = welcome()
+    choice = welcome(cheat)
 
     match choice:
         case 1:
@@ -131,16 +131,16 @@ while True:
             continue_debug = debug_module.debug(welcome)
         case 4:
             print(Fore.YELLOW, credits)
-            credit_input = 'UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT B A'
+            credit_input = input("Enter to continue: ")
             if check_konami_code(credit_input):
                 cheat = True
                 print("Cheat Mode enabled. You're really cheating!")
-                welcome()
+                continue
         case 5:
-            SystemExit()
-            cheat = False
+            exit()
 
     end()
 
     if KeyboardInterrupt:
         cheat = False
+
