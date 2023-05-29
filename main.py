@@ -3,16 +3,10 @@ import pathlib
 import debug_module
 import base64
 import options_module
+import client
 import yaml
-import requests
+import pygame
 from colorama import Fore, Back, Style
-
-with open("config.yaml", "r") as f:
-    config = yaml.load(f, Loader=yaml.FullLoader)
-
-    #_options_ = requests.get(config["show_word_after_loss"])
-print(config)
-
 
 
 def welcome(cheat):
@@ -55,49 +49,50 @@ def select_word():
     word = random.choice(target_words_contents)
     return word
 
-def algorithm(user_word, word, tries, _options_):
-
+def algorithm(user_word, word, tries, config, cheat):
     user_word = list(user_word)
     word = list(word)
-    postion = 0
-    output = list()
+    position = 0
+    output = [" "] * 5
 
     for position in range(len(word)):
-    
-        if user_word[postion] == word[position]:
-            output.append(user_word[postion])
-            user_word[postion] = "_"
-            postion += 1
+        if user_word[position] == word[position]:
+            output[position] = "X"
+        elif user_word[position] in word and word.index(user_word[position]) != position:
+            output[position] = "*"
+        else:
+            output[position] = "-"
 
-
-
-
-
-    #for letter in user_word:
-        #if letter not in word:
-            #print(Fore.RED + letter, "-")
-        #elif letter in word and user_word.index(letter) != word.index(letter):
-            #print(Fore.YELLOW + letter, "*")
-        #elif user_word.index(letter) == word.index(letter):
-            #print(Fore.GREEN + letter, "X")
+    for position in range(len(output)):
+        if output[position] == "X":
+            print(Fore.GREEN, output[position])
+        elif output[position] == "*":
+            print(Fore.YELLOW, output[position])
+        else:
+            print(Fore.RED, output[position])
 
     if user_word == word:
         print(Fore.GREEN + "You win")
+        tries_remaining = tries
+    elif user_word == word and cheat:
+        print(Fore.GREEN + "You win, but you cheated so you don't deserve it")
+        tries_remaining = 0  # Makes score 0 because of cheating
     elif user_word == word and tries == 1:
-        print("You won with one try remainding that was close")
+        print("You won with one try remaining. That was close!")
+        tries_remaining = 1
     else:
         tries -= 1  # Decrease the tries counter
         if tries > 0:
-            print(Fore.YELLOW + "Try again")
+            print(Fore.MAGENTA + "Try again")
             print(tries, "Tries remaining")
-            user_input(word, cheat, tries)  # Pass the updated tries value
+            return False  # Indicate the need for another input
         else:
             print(Fore.RED + "You lose")
-            if _options_ == "true":
-                print("The word was: " + word)
+            if config.get("show_word_after_loss", False):
+                print("The word was:", " ".join(word))
+    return True  # Indicate the end of the game
 
-
-def user_input(word, cheat, tries=MAX_TRIES):
+def user_input(word, cheat, config, tries=MAX_TRIES):
     if cheat:
         print("Word:", word)
         print("What's the fun in this")
@@ -109,14 +104,12 @@ def user_input(word, cheat, tries=MAX_TRIES):
 
     if len(user_word) == 5:
         if user_word in valid_words_contents:
-            algorithm(user_word, word, tries,)
+            return algorithm(user_word, word, tries, config, cheat)
         else:
             print(Fore.RED + "Invalid word")
-            user_input(word, cheat, tries)
     else:
         print(Fore.RED + "Must be a 5 letter word. Try again.")
-        user_input(word, cheat, tries)
-
+    return False  # Indicate the need for another input
 
 def end():
     # Prompt the user to end the program
@@ -124,10 +117,12 @@ def end():
     if end.lower() == "yes" or end.lower() == "y":
         exit()
 
-def main():
+def main(cheat):
     # Main game loop
     word = select_word()
-    user_input(word, cheat)
+    while True:
+        if user_input(word, cheat, config):
+            break
     return word
 
 import subprocess
@@ -159,6 +154,7 @@ def check_konami_code(input_sequence):
     encoded_input = base64.b64encode(input_sequence.encode())
     return encoded_input == konami_code
 
+config = {}
 cheat = False
 
 while True:
@@ -167,13 +163,13 @@ while True:
 
     match choice:
         case 1:
-            main()
+            main(cheat)
         case 2:
             show_instructions()
         case 3:
             continue_debug = debug_module.debug(welcome)
         case 4:
-            options = options_module.options()
+            config = options_module.options()
         case 5:
             print(Fore.YELLOW, credits)
             credit_input = input("Enter to continue: ")
@@ -188,4 +184,3 @@ while True:
 
     if KeyboardInterrupt:
         cheat = False
-
