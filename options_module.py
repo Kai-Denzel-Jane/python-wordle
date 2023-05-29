@@ -1,29 +1,25 @@
-import main
+import yaml
 
 def options():
+    with open("config.yaml", "r") as config_file:
+        config = yaml.safe_load(config_file)
 
     print("1. Show word after loss")
-
     option = int(input("Enter your option: "))
 
     match option:
-
         case 1:
-            show_word_input = input("Enter On or Off: ")
+            show_word_input = input("Enter true or false: ")
+            match show_word_input.lower():
+                case "true":
+                    config["show_word_after_loss"] = True
+                case "false":
+                    config["show_word_after_loss"] = False
+                case _:
+                    print("Invalid input. Option not changed.")
+                    
 
-            match show_word_input:
+    with open("config.yaml", "w") as config_file:
+        yaml.dump(config, config_file)
+        return config
 
-                case "On":
-                    yaml_config = """options:
-                    -show_word_after_loss: true"""
-                
-                case "Off":
-                    yaml_config = """options:
-                    -show_word_after_loss: false"""
-    
-    return yaml_config
-
-def write_changes():
-
-    with open("configw.yaml", "w") as config_file:
-        config_file.write(options)
