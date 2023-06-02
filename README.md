@@ -19,7 +19,7 @@ The following file will contain documentation about this project.
 ### Now you are going to want to install (insert packages here).
 
 ### Shell Commands (use pip@3.11 to avoid installation of default PATH)
-```zsh
+```bash
     pip3.11 install
 ```
 ---
