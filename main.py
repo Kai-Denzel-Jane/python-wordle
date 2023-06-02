@@ -5,7 +5,6 @@ import base64
 import options_module
 import client
 import yaml
-import pygame
 from colorama import Fore, Back, Style
 
 
