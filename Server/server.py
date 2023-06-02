@@ -1,8 +1,9 @@
 import threading
 import socket
+import pathlib
 
 PORT = 8080  # Replace with the actual server port
-HIGH_SCORES_FILE = "high_scores.txt"  # Replace with the actual file path
+HIGH_SCORES_FILE = pathlib.Path("high_scores.txt")  # Replace with the actual file path
 
 def handle_client(client_socket):
     data = client_socket.recv(1024).decode()
@@ -38,10 +39,10 @@ def handle_client(client_socket):
 
 def start_server():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(("10.1.1.135", PORT))  # Replace "localhost" with the actual server IP address
+    server_socket.bind(("127.0.0.1", PORT))  # Replace "localhost" with the actual server IP address
     server_socket.listen(1)
 
-    print("Server started. Listening for connections...")
+    print("Server started. Listening for connections on port", PORT)
 
     while True:
         client_socket, address = server_socket.accept()
@@ -50,7 +51,13 @@ def start_server():
         # Start a new thread to handle the client
         threading.Thread(target=handle_client, args=(client_socket,)).start()
 
+
     server_socket.close()
 
 if __name__ == "__main__":
     start_server()
+
+while True:
+
+    if KeyboardInterrupt:
+        exit()

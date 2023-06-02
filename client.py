@@ -8,11 +8,11 @@ def submit_high_score(username, score, host, port):
     client_socket.close()
 
 
-def info_input():
+def info_input(tries_remaining):
     port = int(input("Enter the server port: "))
     host = str(input("Enter the server IP: "))
     username = str(input("Enter your name: "))  # Replace with the actual username
-    score = int()  # Replace with the actual score obtained by the player
+    score = tries_remaining  # Replace with the actual score obtained by the player
 
     if port == 0 and host == "None":
         import main
