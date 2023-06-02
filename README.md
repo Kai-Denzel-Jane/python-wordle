@@ -24,7 +24,7 @@ pip3.11 install colorama pyyaml
 ```
 ---
 
-## Developer Info
+# Developer Info
 
 ### Packages used:
 
