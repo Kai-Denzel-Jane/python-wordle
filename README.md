@@ -33,8 +33,12 @@ pip3.11 install colorama pyyaml
     random (to get random strings)
     os (to check wether files are present)
     pathlib (had better experiences with this appose to a string path)
-    NEEDS TO CHANGE
+    debug_module (file containing debug functions)
+    options_module (file that handled options)
+    client (file the uploads users scores)
 
+    pyyaml (used to manage options)
+    colorama (makes the terminal look nicer, may have issues if user has a custom terminal or something like OHMYZSH etc)
 ### Functions / Methods
 
 Choose a random word from `all_words.txt`
