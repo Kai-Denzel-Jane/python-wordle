@@ -1,2 +1,2 @@
 show_word_after_loss: true
-attempt_to_upload_score: 
+upload_score: true

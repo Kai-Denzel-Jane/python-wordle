@@ -7,11 +7,13 @@ import client
 import yaml
 from colorama import Fore, Back, Style
 
+with open("config.yaml", "r") as config_file:
+        config = yaml.safe_load(config_file)
 
 def welcome(cheat):
     # Display the welcome menu and prompt for user input
-    print(Fore.CYAN + "Enter a number to start:")
-    print("1. Play the game")
+
+    print(Fore.CYAN + "1. Play the game")
     print("2. Instructions")
     print("3. Debug")
     print("4. Options")
@@ -72,27 +74,34 @@ def algorithm(user_word, word, tries, config, cheat):
             print(Fore.RED, output[position])
 
     if user_word == word:
-        print(Fore.GREEN + "You win")
-        tries_remaining = tries
-    elif user_word == word and cheat:
-        print(Fore.GREEN + "You win, but you cheated so you don't deserve it")
-        tries_remaining = 0  # Makes score 0 because of cheating
-    elif user_word == word and tries == 1:
-        print("You won with one try remaining. That was close!")
-        tries_remaining = 1
+        if tries == 1:
+            print("You won with one try remaining. That was close!")
+            tries_remaining = 1
+
+        if cheat:
+            print(Fore.GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
+            tries_remaining = 0  # Makes score 0 because of cheating
+        else:
+            print(Fore.GREEN + "You win", Style.RESET_ALL)
+            tries_remaining = tries
+
+        if config.get("upload_score", False):
+            client.info_input(tries_remaining = tries)
     else:
         tries -= 1  # Decrease the tries counter
         if tries > 0:
             print(Fore.MAGENTA + "Try again")
             print(tries, "Tries remaining")
-            return False  # Indicate the need for another input
+            user_input(word, cheat, config, tries)  # Indicate the need for another input
         else:
             print(Fore.RED + "You lose")
             if config.get("show_word_after_loss", False):
                 print("The word was:", " ".join(word))
-    return tries_remaining  # Indicate the end of the game
 
-def user_input(word, cheat, config, tries=MAX_TRIES):
+    
+
+
+def user_input(word, cheat, config, tries):
     if cheat:
         print("Word:", word)
         print("What's the fun in this")
@@ -107,9 +116,10 @@ def user_input(word, cheat, config, tries=MAX_TRIES):
             return algorithm(user_word, word, tries, config, cheat)
         else:
             print(Fore.RED + "Invalid word")
+            user_input(word, cheat, config, tries)
     else:
         print(Fore.RED + "Must be a 5 letter word. Try again.")
-    return False  # Indicate the need for another input
+        user_input(word, cheat, config, tries)
 
 def end():
     # Prompt the user to end the program
@@ -120,10 +130,9 @@ def end():
 def main(cheat):
     # Main game loop
     word = select_word()
-    while True:
-        if user_input(word, cheat, config):
-            break
-    return word
+    tries = MAX_TRIES
+
+    user_input(word, cheat, config, tries)
 
 import subprocess
 
@@ -154,9 +163,7 @@ def check_konami_code(input_sequence):
     encoded_input = base64.b64encode(input_sequence.encode())
     return encoded_input == konami_code
 
-config = {}
 cheat = False
-score = algorithm()[0]
 
 while True:
     # Main program loop
