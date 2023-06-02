@@ -9,7 +9,7 @@ The following file will contain documentation about this project.
 
 ##  [Dependencies](#dependencies)
 ##  [Usage](./Instructions.md) 
-##  [Developer Info](./README.md#developer-info)
+##  [Developer Info](#developer-info)
 
 ---
 
