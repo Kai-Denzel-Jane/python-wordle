@@ -44,28 +44,33 @@ pip3.11 install colorama pyyaml
 Choose a random word from `target_words.txt`
 
 ```python
-import os
-import pathlib
-import random
-
 TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')
 VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')
 
-def files():
-    if os.path.exists(TARGET_WORDS):
+MAX_TRIES = 6
+
+def load_files():
+    # Load the contents of the target words and valid words files
+    target_words_contents = []
+    valid_words_contents = []
+
+    if TARGET_WORDS.exists():
         with open(TARGET_WORDS, "r") as words:
             target_words_contents = words.read().splitlines()
+    
 
-
-    if os.path.exists(VALID_WORDS):
+    if VALID_WORDS.exists():
         with open(VALID_WORDS, "r") as valid_words:
             valid_words_contents = valid_words.read().splitlines()
 
-    return(target_words_contents, valid_words_contents)
-def selectword():
+    return target_words_contents, valid_words_contents
 
-    word = str(random.choice(files()[0]))
-    print(word)
-selectword()
+def select_word():
+    # Select a random word from the target words
+    target_words_contents = load_files()[0]
+    word = random.choice(target_words_contents)
+    return word
 
 ```
+
+Yes this is just the function definition
