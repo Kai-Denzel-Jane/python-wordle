@@ -98,9 +98,6 @@ def algorithm(user_word, word, tries, config, cheat):
             if config.get("show_word_after_loss", False):
                 print("The word was:", " ".join(word))
 
-    
-
-
 def user_input(word, cheat, config, tries):
     if cheat:
         print("Word:", word)
