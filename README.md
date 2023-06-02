@@ -41,7 +41,7 @@ pip3.11 install colorama pyyaml
     colorama (makes the terminal look nicer, may have issues if user has a custom terminal or something like OHMYZSH etc)
 ### Functions / Methods
 
-Choose a random word from `all_words.txt`
+Choose a random word from `target_words.txt`
 
 ```python
 import os
