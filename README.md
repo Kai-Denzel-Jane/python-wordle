@@ -7,7 +7,7 @@ The following file will contain documentation about this project.
 
 # Main Points
 
-##  [Dependencies](./README.md##Dependencies)
+##  [Dependencies](./README.md#Dependencies)
 ##  [Usage](./Instructions.md) 
 ##  [Developer Info](./README.md#developer-info)
 
