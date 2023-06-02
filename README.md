@@ -7,13 +7,13 @@ The following file will contain documentation about this project.
 
 # Main Points
 
-##  [Dependencies](./README.md#Dependencies)
+##  [Dependencies](./README.md#dependencies)
 ##  [Usage](./Instructions.md) 
 ##  [Developer Info](./README.md#developer-info)
 
 ---
 
-## Dependencies
+# Dependencies
 
 ### Firstly you are going to want to install (insert packages here).
 
