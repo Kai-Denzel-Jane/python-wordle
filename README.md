@@ -28,7 +28,7 @@ pip3.11 install colorama pyyaml
 
 ### Packages used:
 
-### All currently used packages come inbuilt with python (latest release).
+### Most are built into python
 
     random (to get random strings)
     os (to check wether files are present)
