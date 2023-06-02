@@ -13,7 +13,7 @@ The following file will contain documentation about this project.
 
 ---
 
-## Dependencies
+# Dependencies
 
 ### Firstly you are going to want to install (insert packages here).
 
