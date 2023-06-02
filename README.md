@@ -15,12 +15,13 @@ The following file will contain documentation about this project.
 
 # Dependencies
 
-### Firstly you are going to want to install (insert packages here).
+### This script was made in python@3.11, and should work with python@3.10 and above.
+### Now you are going to want to install (insert packages here).
 
-### Shell Commands to do so: 
-
-    TBD
-
+### Shell Commands (use pip@3.11 to avoid installation of default PATH)
+```zsh
+    pip3.11 install
+```
 ---
 
 ## Developer Info
