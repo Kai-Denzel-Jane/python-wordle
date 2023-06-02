@@ -20,7 +20,7 @@ The following file will contain documentation about this project.
 
 ### Shell Commands (use pip@3.11 to avoid installation of default PATH)
 ```zsh
-pip3.11 install
+pip3.11 install colorama pyyaml
 ```
 ---
 
