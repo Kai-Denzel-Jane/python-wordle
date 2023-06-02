@@ -35,6 +35,7 @@ def load_files():
     if TARGET_WORDS.exists():
         with open(TARGET_WORDS, "r") as words:
             target_words_contents = words.read().splitlines()
+    
 
     if VALID_WORDS.exists():
         with open(VALID_WORDS, "r") as valid_words:
@@ -89,7 +90,7 @@ def algorithm(user_word, word, tries, config, cheat):
             print(Fore.RED + "You lose")
             if config.get("show_word_after_loss", False):
                 print("The word was:", " ".join(word))
-    return True  # Indicate the end of the game
+    return tries_remaining  # Indicate the end of the game
 
 def user_input(word, cheat, config, tries=MAX_TRIES):
     if cheat:
@@ -155,6 +156,7 @@ def check_konami_code(input_sequence):
 
 config = {}
 cheat = False
+score = algorithm()[0]
 
 while True:
     # Main program loop
