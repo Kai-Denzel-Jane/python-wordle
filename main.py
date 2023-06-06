@@ -146,10 +146,11 @@ def show_instructions():
             except FileNotFoundError:
                 print("Unable to open the instructions file. Please refer to the README for instructions.")
 
+
 credits = """
     Main Developer: Kai Jane (kaijanedev@icloud.com)
     Source code: https://github.com/Kai-Denzel-Jane/python-wordle/
-    Current Release: 1.0.0
+    Current Release: 0.0.1
     Packages used: colorama
 """
 
