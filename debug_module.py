@@ -1,4 +1,5 @@
 import platform
+import plistlib
 from colorama import Fore, Style
 
 
@@ -7,8 +8,12 @@ def get_release_version():
     release = platform.release()
 
     if system == "Darwin":
-        # macOS major release version
-        return f"macOS {release}"
+        # macOS version and Darwin version
+        with open("/System/Library/CoreServices/SystemVersion.plist", "rb") as SystemVersion:
+            plist = plistlib.load(SystemVersion)
+            mac_os_version = plist.get("ProductVersion")
+        return f"macOS: {mac_os_version}, Darwin: {release}"
+    
     elif system == "Linux":
         # Linux distribution and major release version
         with open("/etc/os-release", "r") as f:
@@ -21,10 +26,10 @@ def get_release_version():
             if distro:
                 return f"{distro} {release}"
             else:
-                return f"Linux {release}"
+                return f"Linux: {release}"
     elif system == "Windows":
         # Windows major release version
-        return f"Windows {release}"
+        return f"Windows: {release}"
     else:
         return "Unknown"
 
