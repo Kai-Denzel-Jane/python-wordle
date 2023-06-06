@@ -1,4 +1,5 @@
 # python-wordle
+
 This is a repository for my Cert III Introduction to Programming project, which is making Worlde the NYT owned web game.
 
 The following file will contain documentation about this project.
@@ -7,21 +8,26 @@ The following file will contain documentation about this project.
 
 # Main Points
 
-##  [Dependencies](#dependencies)
-##  [Usage](./Instructions.md) 
-##  [Developer Info](#developer-info)
+## [Dependencies](#dependencies)
+
+## [Usage](./Instructions.md)
+
+## [Developer Info](#developer-info)
 
 ---
 
 # Dependencies
 
 ### This script was made in python@3.11, and should work with python@3.10 and above.
+
 ### Now you are going to want to install (insert packages here).
 
-### Shell Commands (use pip@3.11 to avoid installation of default PATH)
+### Shell Commands (use pip3.11 to avoid installation of default PATH)
+
 ```zsh
-pip3.11 install colorama pyyaml
+pip3.11 install colorama pyyaml plistlib
 ```
+
 ---
 
 # Developer Info
@@ -30,20 +36,22 @@ pip3.11 install colorama pyyaml
 
 ### Most are built into python
 
-    random (to get random strings)
-    os (to check wether files are present)
-    pathlib (had better experiences with this appose to a string path)
-    debug_module (file containing debug functions)
-    options_module (file that handled options)
-    client (file the uploads users scores)
+    random (built-in)
+    pathlib (built-in)
+    debug_module (file)
+    base64  (built-in)
+    options_module (file)
+    client  (file)
+    yaml (package)
 
-    pyyaml (used to manage options)
-    colorama (makes the terminal look nicer, may have issues if user has a custom terminal or something like OHMYZSH etc)
 ### Functions / Methods
 
 Choose a random word from `target_words.txt`
 
 ```python
+import random
+import pathlib
+
 TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')
 VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')
 
@@ -57,7 +65,7 @@ def load_files():
     if TARGET_WORDS.exists():
         with open(TARGET_WORDS, "r") as words:
             target_words_contents = words.read().splitlines()
-    
+  
 
     if VALID_WORDS.exists():
         with open(VALID_WORDS, "r") as valid_words:
@@ -73,4 +81,4 @@ def select_word():
 
 ```
 
-Yes this is just the function definition
+Yes this is just the function definition and packages / paths
