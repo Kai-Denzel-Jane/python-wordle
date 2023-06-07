@@ -83,4 +83,29 @@ def select_word():
 
 ```
 
-Yes this is just the function definition and packages / paths
+Ask User for input and compare requirements
+
+```python
+from colorama import Fore, Back, Style
+
+def user_input(word, cheat, config, tries):
+    if cheat:
+        print("Word:", word)
+        print("What's the fun in this")
+
+    user_word = input(Fore.CYAN + "Enter a 5-letter word: " + Style.RESET_ALL)
+    user_word = user_word.lower()
+
+    valid_words_contents = load_files()[1]
+
+    if len(user_word) == 5:
+        if user_word in valid_words_contents:
+            return algorithm(user_word, word, tries, config, cheat)
+        else:
+            print(Fore.RED + "Invalid word")
+            user_input(word, cheat, config, tries)
+    else:
+        print(Fore.RED + "Must be a 5 letter word. Try again.")
+        user_input(word, cheat, config, tries)
+```
+
