@@ -32,17 +32,19 @@ pip3.11 install colorama pyyaml plistlib
 
 # Developer Info
 
-### Packages used:
+### Modules used:
 
-### Most are built into python
+    random          | (Built-In)
+    pathlib         | (Built-In)
+    platform        | (Built-In)
+    base64          | (Built-In)
+    options_module  | (File)
+    debug_module    | (File)
+    client          | (File)
 
-    random (built-in)
-    pathlib (built-in)
-    debug_module (file)
-    base64  (built-in)
-    options_module (file)
-    client  (file)
-    yaml (package)
+    pyyaml          | (Package)
+    colorama        | (Package)
+    plistlib        | (Package)
 
 ### Functions / Methods
 
