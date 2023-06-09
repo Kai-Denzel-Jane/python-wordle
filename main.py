@@ -4,9 +4,9 @@ import pathlib # Used to define file paths because pythons default method can be
 import debug_module # File with debug functions 
 import base64 # Used to endcode / decode strings
 import options_module # File with option functions to allow user to change 
-import client # File which asks for information and attempts to upload scores to server
-import yaml # Downloaded package allowing for configuration to be saved in yaml files
-from colorama import Fore, Back, Style # Downloaded package allowing for prettier terminal 
+import client                                       # File which asks for information and attempts to upload scores to server
+import yaml                                         # Downloaded package allowing for configuration to be saved in yaml files
+from colorama import Fore, Back, Style              # Downloaded package allowing for prettier terminal 
 
 # Loads the configuration file
 with open("config.yaml", "r") as config_file:
@@ -14,26 +14,25 @@ with open("config.yaml", "r") as config_file:
 
 # Main Menu 
 def welcome(cheat):
-    # Display the welcome menu and prompt for user input
-
-    print(Fore.CYAN + "1. Play the game") # Loads the game itself 
-    print("2. Instructions") # Opens Instructions.md with default set app
-    print("3. Debug") # Allows users to see debug information 
-    print("4. Options") # Where users can change options 
-    print("5. Credits / Information") # "Just" Credits ;)
-    print("6. Exit") # Exits the script 
+    print(Fore.CYAN + "1. Play the game")           # Loads the game itself 
+    print("2. Instructions")                        # Opens Instructions.md with default set app
+    print("3. Debug")                               # Allows users to see debug information 
+    print("4. Options")                             # Where users can change options 
+    print("5. Credits / Information")               # "Just" Credits ;)
+    print("6. Exit")                                # Exits the script 
     print(Style.RESET_ALL)
 
     choice = int(input("Input number: "))
     return choice
 
-TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt') # Words that can possibly be chosen as the word yoh are guessing 
-VALID_WORDS = pathlib.Path('./word-bank/all_words.txt') # Words that can be guessed 
+TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')         # Words that can possibly be chosen as the word yoh are guessing 
+VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')             # Words that can be guessed 
 
-MAX_TRIES = 6 # Amount of lives user has doesn't really need to be a constant 
+MAX_TRIES = 6                                                       # Amount of lives user has doesn't really need to be a constant 
 
+# Loads necessary files
 def load_files():
-    # Load the contents of the target words and valid words files
+    
     target_words_contents = []
     valid_words_contents = []
 
@@ -56,20 +55,20 @@ def select_word():
 
 # Main logic, this is where the scoring is implemented 
 def algorithm(user_word, word, tries, config, cheat):
-    user_word = list(user_word) # Make the users guess a list
-    word = list(word) # Make the selected word a list
-    position = 0 # Could be removed 
-    output = [" "] * 5 # Output list to show hints
+    user_word = list(user_word)                     # Make the users guess a list
+    word = list(word)                               # Make the selected word a list
+    position = 0                                    # Could be removed 
+    output = [" "] * 5                              # Output list to show hints
 
     for position in range(len(word)):
         if user_word[position] == word[position]:
-            output[position] = "X" # Updates the output list at the position where the letter was both in the word and correct position 
+            output[position] = "X"                  # Updates the output list at the position where the letter was both in the word and correct position 
         elif user_word[position] in word and word.index(user_word[position]) != position:
-            output[position] = "*" # Updates the output list at the position where the letter is in the word but not that position 
+            output[position] = "*"                  # Updates the output list at the position where the letter is in the word but not that position 
         else:
-            output[position] = "-" # Updates the output list at the position indicating there's no occurrence of this letter in the selected word
+            output[position] = "-"                  # Updates the output list at the position indicating there's no occurrence of this letter in the selected word
 
-    # Some nice colours
+    # Some nice colours and printing of the output
     for position in range(len(output)):
         if output[position] == "X":
             print(Fore.GREEN, output[position])
@@ -86,7 +85,7 @@ def algorithm(user_word, word, tries, config, cheat):
 
         if cheat:
             print(Fore.GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
-            tries = 0  # Makes score 0 because of cheating
+            tries = 0                               # Makes score 0 because of cheating
         else:
             print(Fore.GREEN + "You win", Style.RESET_ALL)
 
