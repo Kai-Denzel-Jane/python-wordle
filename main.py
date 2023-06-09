@@ -1,33 +1,36 @@
-import random
-import pathlib
-import debug_module
-import base64
-import options_module
-import client
-import yaml
-from colorama import Fore, Back, Style
+# Import modules 
+import random # Used to generate random word 
+import pathlib # Used to define file paths because pythons default method can be weird
+import debug_module # File with debug functions 
+import base64 # Used to endcode / decode strings
+import options_module # File with option functions to allow user to change 
+import client # File which asks for information and attempts to upload scores to server
+import yaml # Downloaded package allowing for configuration to be saved in yaml files
+from colorama import Fore, Back, Style # Downloaded package allowing for prettier terminal 
 
+# Loads the configuration file
 with open("config.yaml", "r") as config_file:
         config = yaml.safe_load(config_file)
 
+# Main Menu 
 def welcome(cheat):
     # Display the welcome menu and prompt for user input
 
-    print(Fore.CYAN + "1. Play the game")
-    print("2. Instructions")
-    print("3. Debug")
-    print("4. Options")
-    print("5. Credits / Information")
-    print("6. Exit")
+    print(Fore.CYAN + "1. Play the game") # Loads the game itself 
+    print("2. Instructions") # Opens Instructions.md with default set app
+    print("3. Debug") # Allows users to see debug information 
+    print("4. Options") # Where users can change options 
+    print("5. Credits / Information") # "Just" Credits ;)
+    print("6. Exit") # Exits the script 
     print(Style.RESET_ALL)
 
     choice = int(input("Input number: "))
     return choice
 
-TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')
-VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')
+TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt') # Words that can possibly be chosen as the word yoh are guessing 
+VALID_WORDS = pathlib.Path('./word-bank/all_words.txt') # Words that can be guessed 
 
-MAX_TRIES = 6
+MAX_TRIES = 6 # Amount of lives user has doesn't really need to be a constant 
 
 def load_files():
     # Load the contents of the target words and valid words files
@@ -45,26 +48,28 @@ def load_files():
 
     return target_words_contents, valid_words_contents
 
+# Select a random word from the target words
 def select_word():
-    # Select a random word from the target words
     target_words_contents = load_files()[0]
     word = random.choice(target_words_contents)
     return word
 
+# Main logic, this is where the scoring is implemented 
 def algorithm(user_word, word, tries, config, cheat):
-    user_word = list(user_word)
-    word = list(word)
-    position = 0
-    output = [" "] * 5
+    user_word = list(user_word) # Make the users guess a list
+    word = list(word) # Make the selected word a list
+    position = 0 # Could be removed 
+    output = [" "] * 5 # Output list to show hints
 
     for position in range(len(word)):
         if user_word[position] == word[position]:
-            output[position] = "X"
+            output[position] = "X" # Updates the output list at the position where the letter was both in the word and correct position 
         elif user_word[position] in word and word.index(user_word[position]) != position:
-            output[position] = "*"
+            output[position] = "*" # Updates the output list at the position where the letter is in the word but not that position 
         else:
-            output[position] = "-"
+            output[position] = "-" # Updates the output list at the position indicating there's no occurrence of this letter in the selected word
 
+    # Some nice colours
     for position in range(len(output)):
         if output[position] == "X":
             print(Fore.GREEN, output[position])
@@ -72,7 +77,8 @@ def algorithm(user_word, word, tries, config, cheat):
             print(Fore.YELLOW, output[position])
         else:
             print(Fore.RED, output[position])
-
+            
+    # Determines if the user one or lost
     if user_word == word:
         if tries == 1:
             print("You won with one try remaining. That was close!")
@@ -85,7 +91,7 @@ def algorithm(user_word, word, tries, config, cheat):
             print(Fore.GREEN + "You win", Style.RESET_ALL)
 
         if config.get("upload_score", False):
-            client.info_input(tries_remaining = tries)
+            client.info_input(tries_remaining = tries) # If configuration is set to true attempt to upload scores
     else:
         tries -= 1  # Decrease the tries counter
         if tries > 0:
@@ -95,19 +101,20 @@ def algorithm(user_word, word, tries, config, cheat):
         else:
             print(Fore.RED + "You lose")
             if config.get("show_word_after_loss", False):
-                print("The word was:", " ".join(word))
+                print("The word was:", " ".join(word)) # If configuration set to true show what the correct word was
 
+# User Input
 def user_input(word, cheat, config, tries):
     if cheat:
         print("Word:", word)
-        print("What's the fun in this")
+        print("What's the fun in this") # Shows user is cheating 
 
-    user_word = input(Fore.CYAN + "Enter a 5-letter word: " + Style.RESET_ALL)
-    user_word = user_word.lower()
+    user_word = input(Fore.CYAN + "Enter a 5-letter word: " + Style.RESET_ALL) # Asks for user input 
+    user_word = user_word.lower() # Makes users input lowercase 
 
-    valid_words_contents = load_files()[1]
+    valid_words_contents = load_files()[1] # Calls the valid words from the returned tuple from the load_files function
 
-    if len(user_word) == 5:
+    if len(user_word) == 5: # Checks the user inputted a 5 letter word as asked
         if user_word in valid_words_contents:
             return algorithm(user_word, word, tries, config, cheat)
         else:
