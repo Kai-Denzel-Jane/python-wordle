@@ -16,9 +16,9 @@ def handle_client(client_socket):
     
     with open(HIGH_SCORES_FILE, "w") as file:
         for line in lines:
-            existing_username, existing_score = line.strip().split(":")
+            username, existing_score = line.strip().split(":")
             existing_score = int(existing_score)  # Convert the existing score to an integer
-            if existing_username == username:
+            if line.startswith(username):
                 if score > existing_score:  # Check if the new score is higher
                     file.write(f"{username}:{score}\n")
                     updated = True
@@ -50,14 +50,7 @@ def start_server():
 
         # Start a new thread to handle the client
         threading.Thread(target=handle_client, args=(client_socket,)).start()
-
-
-    server_socket.close()
+        print("Listening for connections on port 8080")
 
 if __name__ == "__main__":
     start_server()
-
-while True:
-
-    if KeyboardInterrupt:
-        exit()

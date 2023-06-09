@@ -76,14 +76,13 @@ def algorithm(user_word, word, tries, config, cheat):
     if user_word == word:
         if tries == 1:
             print("You won with one try remaining. That was close!")
-            tries_remaining = 1
+            tries = 1
 
         if cheat:
             print(Fore.GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
-            tries_remaining = 0  # Makes score 0 because of cheating
+            tries = 0  # Makes score 0 because of cheating
         else:
             print(Fore.GREEN + "You win", Style.RESET_ALL)
-            tries_remaining = tries
 
         if config.get("upload_score", False):
             client.info_input(tries_remaining = tries)
@@ -185,6 +184,8 @@ while True:
                 continue
         case 6:
             exit()
+        case 000:
+            main(cheat=True)
 
     end()
 
