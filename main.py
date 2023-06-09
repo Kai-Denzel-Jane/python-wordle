@@ -68,6 +68,7 @@ def algorithm(user_word, word, tries, config, cheat):
             output[position] = "*" # Updates the output list at the position where the letter is in the word but not that position 
         else:
             output[position] = "-" # Updates the output list at the position indicating there's no occurrence of this letter in the selected word
+
     # Some nice colours
     for position in range(len(output)):
         if output[position] == "X":
@@ -76,6 +77,7 @@ def algorithm(user_word, word, tries, config, cheat):
             print(Fore.YELLOW, output[position])
         else:
             print(Fore.RED, output[position])
+            
     # Determines if the user one or lost
     if user_word == word:
         if tries == 1:
