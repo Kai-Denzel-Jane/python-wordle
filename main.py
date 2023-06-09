@@ -90,7 +90,7 @@ def algorithm(user_word, word, tries, config, cheat):
         else:
             print(Fore.GREEN + "You win", Style.RESET_ALL)
 
-        if config.get("upload_score", False):
+        if config.get("upload_score", False) and tries != 0:
             client.info_input(tries_remaining = tries) # If configuration is set to true attempt to upload scores
     else:
         tries -= 1  # Decrease the tries counter
@@ -126,7 +126,7 @@ def user_input(word, cheat, config, tries):
 
 def end():
     # Prompt the user to end the program
-    end = input(Fore.CYAN + "End [y/n]" + Style.RESET_ALL)
+    end = input(Fore.CYAN + "End [y/n] ?" + Style.RESET_ALL)
     if end.lower() == "yes" or end.lower() == "y":
         exit()
 
@@ -157,7 +157,7 @@ credits = """
     Main Developer: Kai Jane (kaijanedev@icloud.com)
     Source code: https://github.com/Kai-Denzel-Jane/python-wordle/
     Current Release: 0.0.1
-    Packages used: colorama
+    Packages used: colorama, pyyaml, plistlib
 """
 
 konami_code = b'VVAgVVAgRE9XTiBET1dOIExFRlQgUklHSFQgTEVGVCBSSUdIVCBCIEE='
@@ -191,8 +191,6 @@ while True:
                 continue
         case 6:
             exit()
-        case 000:
-            main(cheat=True)
 
     end()
 
