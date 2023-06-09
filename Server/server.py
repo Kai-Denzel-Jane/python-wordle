@@ -3,7 +3,7 @@ import socket
 import pathlib
 
 PORT = 8080  # Replace with the actual server port
-HIGH_SCORES_FILE = pathlib.Path("high_scores.txt")  # Replace with the actual file path
+HIGH_SCORES_FILE = pathlib.Path("./high_scores.txt")  # Replace with the actual file path
 
 def handle_client(client_socket):
     data = client_socket.recv(1024).decode()
@@ -16,12 +16,13 @@ def handle_client(client_socket):
     
     with open(HIGH_SCORES_FILE, "w") as file:
         for line in lines:
-            username, existing_score = line.strip().split(":")
+            existing_username, existing_score = line.strip().split(":")
             existing_score = int(existing_score)  # Convert the existing score to an integer
-            if line.startswith(username):
+            if existing_username == username:
                 if score > existing_score:  # Check if the new score is higher
                     file.write(f"{username}:{score}\n")
                     updated = True
+
                 else:
                     file.write(line)  # Keep the existing high score
             else:
@@ -50,7 +51,6 @@ def start_server():
 
         # Start a new thread to handle the client
         threading.Thread(target=handle_client, args=(client_socket,)).start()
-        print("Listening for connections on port 8080")
 
 if __name__ == "__main__":
     start_server()
