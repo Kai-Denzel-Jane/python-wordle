@@ -34,19 +34,19 @@ pip3.11 install colorama pyyaml plistlib
 
 ### Modules used:
 
-    random          | (Built-In)
-    pathlib         | (Built-In)
-    platform        | (Built-In)
-    base64          | (Built-In)
-    options_module  | (File)
-    debug_module    | (File)
-    client          | (File)
+* random
+* pathlib
+* base64
+* subprocess
+* debug_module
+* options_module
+* client
+* yaml
+* colorama
+* plistlib
+* platform
 
-    pyyaml          | (Package)
-    colorama        | (Package)
-    plistlib        | (Package)
-
-### Functions / Methods
+Functions / Methods
 
 Choose a random word from `target_words.txt`
 
@@ -108,4 +108,3 @@ def user_input(word, cheat, config, tries):
         print(Fore.RED + "Must be a 5 letter word. Try again.")
         user_input(word, cheat, config, tries)
 ```
-
