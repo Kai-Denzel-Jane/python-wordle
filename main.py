@@ -213,15 +213,7 @@ while True:
                 continue
         case 6:
             exit()
-        case 0: # REMOVE THIS CASE 
-            print(ORANGE, "DEV MODE, this is a development mode, only to be used for testing purposes.")
-            password = "DEV-KAI"
-
-            if input("Enter your password: ") == password:
-
-                selected_word = input("Enter the word you want to be assigned as the target word: ")
-                cheat = True #So we dont go uploading dev stuff to the scoreboard
-                get_user_input(selected_word, cheat, config, MAX_TRIES)
+        
 
 
 
