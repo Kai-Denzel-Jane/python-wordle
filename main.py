@@ -11,6 +11,12 @@ from colorama import Fore, Back, Style              # Downloaded package allowin
 
 ORANGE = '\033[38;5;208m'
 CYAN = Fore.CYAN
+RED = Fore.RED
+LIGHT_RED = Fore.LIGHTRED_EX
+GREEN = Fore.GREEN
+LIGHT_GREEN = Fore.LIGHTGREEN_EX
+YELLOW = Fore.YELLOW
+WHITE = Fore.WHITE
 
 # Loads the configuration file
 with open("config.yaml", "r") as config_file:
@@ -44,31 +50,38 @@ def load_files():
     if TARGET_WORDS.exists():
         with open(TARGET_WORDS, "r") as words:
             target_words_contents = words.read().splitlines()
+    else:
+        print("The", TARGET_WORDS, "file required to run the game cant be found")
     
 
     if VALID_WORDS.exists():
         with open(VALID_WORDS, "r") as valid_words:
             valid_words_contents = valid_words.read().splitlines()
+    else:
+        print("The", VALID_WORDS, "file required to run the game cant be found")
 
     return target_words_contents, valid_words_contents
 
 # Select a random word from the target words
 def select_word():
     target_words_contents = load_files()[0]
-    word = random.choice(target_words_contents)
-    return word
+    selected_word = random.choice(target_words_contents)
+    return selected_word
 
 # Main logic, this is where the scoring is implemented 
-def algorithm(user_word, word, tries, config, cheat):
-    user_word = list(user_word)                     # Make the users guess a list
-    word = list(word)                               # Make the selected word a list
+def algorithm(user_word, selected_word, tries, config, cheat):
+    user_word = map(str.upper, user_word)
+    selected_word = map(str.upper, selected_word)
+
+    user_word = list(user_word)
+    selected_word = list(selected_word)
     position = 0                                    # Could be removed 
     output = [" "] * 5                              # Output list to show hints
 
-    for position in range(len(word)):
-        if user_word[position] == word[position]:
+    for position in range(len(selected_word)):
+        if user_word[position] == selected_word[position]:
             output[position] = "X"                  # Updates the output list at the position where the letter was both in the word and correct position 
-        elif user_word[position] in word and word.index(user_word[position]) != position:
+        elif user_word[position] in selected_word and selected_word.index(user_word[position]) != position:
             output[position] = "*"                  # Updates the output list at the position where the letter is in the word but not that position 
         else:
             output[position] = "-"                  # Updates the output list at the position indicating there's no occurrence of this letter in the selected word
@@ -83,7 +96,7 @@ def algorithm(user_word, word, tries, config, cheat):
             print(Fore.WHITE + user_word[position], Fore.RED, output[position])
             
     # Determines if the user one or lost
-    if user_word == word:
+    if user_word == selected_word:
         if tries == 1:
             print("You won with one try remaining. That was close!")
             tries = 1
@@ -101,16 +114,16 @@ def algorithm(user_word, word, tries, config, cheat):
         if tries > 0:
             print(Fore.MAGENTA + "Try again")
             print(tries, "Tries remaining")
-            user_input(word, cheat, config, tries)  # Indicate the need for another input
+            get_user_input(selected_word, cheat, config, tries)  # Indicate the need for another input
         else:
             print(Fore.RED + "You lose")
             if config.get("show_word_after_loss", False):
-                print("The word was:", " ".join(word)) # If configuration set to true show what the correct word was
+                print("The word was:", " ".join(selected_word)) # If configuration set to true show what the correct word was
 
 # User Input
-def user_input(word, cheat, config, tries):
+def get_user_input(selected_word, cheat, config, tries):
     if cheat:
-        print("Word:", word)
+        print("Word:", selected_word)
         print("What's the fun in this") # Shows user is cheating 
 
     user_word = input(CYAN + "Enter a 5-letter word: " + Style.RESET_ALL) # Asks for user input 
@@ -120,13 +133,13 @@ def user_input(word, cheat, config, tries):
 
     if len(user_word) == 5: # Checks the user inputted a 5 letter word as asked
         if user_word in valid_words_contents:
-            return algorithm(user_word, word, tries, config, cheat)
+            return algorithm(user_word, selected_word, tries, config, cheat)
         else:
             print(Fore.RED + "Invalid word")
-            user_input(word, cheat, config, tries)
+            get_user_input(selected_word, cheat, config, tries)
     else:
         print(Fore.RED + "Must be a 5 letter word. Try again.")
-        user_input(word, cheat, config, tries)
+        get_user_input(selected_word, cheat, config, tries)
 
 def end():
     # Prompt the user to end the program
@@ -145,7 +158,7 @@ def main(cheat):
     word = select_word()
     tries = MAX_TRIES
 
-    user_input(word, cheat, config, tries)
+    get_user_input(word, cheat, config, tries)
 
 
 def show_instructions():
@@ -159,7 +172,7 @@ def show_instructions():
             try:
                 subprocess.run(['start', file_path], shell=True)  # For Windows
             except FileNotFoundError:
-                print("Unable to open the instructions file. Please refer to the README for instructions.")
+                print(LIGHT_RED,"Unable to open the instructions file. Please refer to the README for instructions.")
 
 
 credits = """
@@ -192,14 +205,25 @@ while True:
         case 4:
             config = options_module.options()
         case 5:
-            print(Fore.YELLOW, credits)
-            credit_input = input(Fore.WHITE + "Enter to continue: ")
+            print(YELLOW, credits)
+            credit_input = input(WHITE + "Enter to continue: ")
             if check_konami_code(credit_input):
                 cheat = True
                 print("Cheat Mode enabled. You're really cheating!")
                 continue
         case 6:
             exit()
+        case 0: # REMOVE THIS CASE 
+            print(ORANGE, "DEV MODE, this is a development mode, only to be used for testing purposes.")
+            password = "DEV-KAI"
+
+            if input("Enter your password: ") == password:
+
+                selected_word = input("Enter the word you want to be assigned as the target word: ")
+                cheat = True #So we dont go uploading dev stuff to the scoreboard
+                get_user_input(selected_word, cheat, config, MAX_TRIES)
+
+
 
     end()
 
