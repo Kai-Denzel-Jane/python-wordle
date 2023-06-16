@@ -27,7 +27,7 @@ The following file will contain documentation about this project.
 ### Shell Commands (use pip3.11 to avoid installation of default PATH)
 
 ```zsh
-pip3.11 install colorama pyyaml biplist
+pip3.11 install colorama pyyaml
 ```
 
 ---
@@ -45,7 +45,7 @@ pip3.11 install colorama pyyaml biplist
 * client | pip-name (N/A)
 * yaml  | pip-name (pyyaml)
 * colorama | pip-name (colorama)
-* plistlib | pip-name (biplist)
+* plistlib | pip-name (N/A)
 * platform | pip-name (N/A)
 
 Functions / Methods
