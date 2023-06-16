@@ -152,10 +152,10 @@ def get_user_input(selected_word, cheat, config, tries):
 
 def end():
     # Prompt the user to end the program
-    end = input(Style.BRIGHT + CYAN + "End " + CYAN + "[" + Fore.LIGHTGREEN_EX + "y" + CYAN + "/" + Fore.LIGHTRED_EX + "n" + CYAN + "]? " + Style.RESET_ALL)
-    if end.lower() == "yes" or end.lower() == "y":
+    stop = input(Style.BRIGHT + CYAN + "End " + CYAN + "[" + Fore.LIGHTGREEN_EX + "y" + CYAN + "/" + Fore.LIGHTRED_EX + "n" + CYAN + "]? " + Style.RESET_ALL)
+    if stop.lower() == "yes" or stop.lower() == "y":
         exit()
-    elif end.lower() == "no" or end.lower() == "n":
+    elif stop.lower() == "no" or stop.lower() == "n":
         return
     else:
         print(Fore.RED + "Invalid choice. Please enter 'y' or 'n'")
