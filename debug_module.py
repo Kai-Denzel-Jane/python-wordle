@@ -16,8 +16,8 @@ def get_release_version():
     
     elif system == "Linux":
         # Linux distribution and major release version
-        with open("/etc/os-release", "r") as f:
-            lines = f.readlines()
+        with open("/etc/os-release", "r") as linux_release:
+            lines = linux_release.readlines()
             distro = None
             for line in lines:
                 if line.startswith("PRETTY_NAME="):

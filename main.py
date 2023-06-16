@@ -75,9 +75,10 @@ def algorithm(user_word, selected_word, tries, config, cheat):
     selected_word = map(str.upper, selected_word)
 
     user_word = list(user_word)
-    selected_word = list(selected_word)
-    position = 0                                    # Could be removed 
+    selected_word = list(selected_word)   
+    position = 0                                
     output = [" "] * 5                              # Output list to show hints
+
 
     for position in range(len(selected_word)):
         if user_word[position] == selected_word[position]:
@@ -144,10 +145,10 @@ def get_user_input(selected_word, cheat, config, tries):
 
 def end():
     # Prompt the user to end the program
-    end_input = input(Style.BRIGHT + CYAN + "End " + CYAN + "[" + LIGHT_GREEN + "y" + CYAN + "/" + LIGHT_RED + "n" + CYAN + "]? " + Style.RESET_ALL)
-    if end.lower() == "yes" or end.lower() == "y":
+    stop = input(Style.BRIGHT + CYAN + "End " + CYAN + "[" + LIGHT_GREEN + "y" + CYAN + "/" + LIGHT_RED + "n" + CYAN + "]? " + Style.RESET_ALL)
+    if stop.lower() == "yes" or stop.lower() == "y":
         exit()
-    elif end.lower() == "no" or end.lower() == "n":
+    elif stop.lower() == "no" or stop.lower() == "n":
         return
     else:
         print(LIGHT_RED + "Invalid choice. Please enter 'y' or 'n'")
@@ -157,7 +158,10 @@ def end():
 def main(cheat):
     # Main game loop
     word = select_word()
-    tries = MAX_TRIES
+    if hardMode:
+        tries = 3
+    else:
+        tries = MAX_TRIES
 
     get_user_input(word, cheat, config, tries)
 
@@ -175,11 +179,10 @@ def show_instructions():
             except FileNotFoundError:
                 print(LIGHT_RED,"Unable to open the instructions file. Please refer to the README for instructions.")
 
-
 credits = """
     Main Developer: Kai Jane (kaijanedev@icloud.com)
     Source code: https://github.com/Kai-Denzel-Jane/python-wordle/
-    Current Release: 0.0.1
+    Current Release: v1.1
     Packages used: colorama, pyyaml, plistlib
 """
 
@@ -210,19 +213,19 @@ while True:
             credit_input = input(WHITE + "Enter to continue: ")
             if check_konami_code(credit_input):
                 cheat = True
-                print("Cheat Mode enabled. You're really cheating!")
+                print(MAGENTA + "Cheat Mode enabled. You're really cheating!")
                 continue
         case 6:
             exit()
+        case 7:
+            # VERY WORK IN PROGRESS
+            hardMode = True
         case 0: # REMOVE THIS CASE IN MAIN BRANCH COMMITS
-            print(ORANGE, "DEV MODE, this is a development mode, only to be used for testing purposes.")
-            password = "DEV-KAI"
-
-            if input("Enter your password: ") == password:
-
-                selected_word = input("Enter the word you want to be assigned as the target word: ")
-                cheat = True #So we dont go uploading dev stuff to the scoreboard
-                get_user_input(selected_word, cheat, config, MAX_TRIES)
+            print(YELLOW, "DEV MODE, this is a development mode, only to be used for testing purposes.")
+            
+            selected_word = input(CYAN + "Enter the word you want to be assigned as the target word: ")
+            cheat = True #So we dont go uploading dev stuff to the scoreboard
+            get_user_input(selected_word, cheat, config, MAX_TRIES)
 
 
 

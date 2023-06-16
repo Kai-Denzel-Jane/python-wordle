@@ -50,6 +50,27 @@ pip3.11 install colorama pyyaml
 
 Functions / Methods
 
+Developer functions:
+
+0 in main menu allows you to chnage the word for debugging / testing
+```python
+    case 0: # REMOVE THIS CASE IN MAIN BRANCH COMMITS
+
+    print(ORANGE, "DEV MODE, this is a development mode, only to be used for testing purposes.")
+
+    password = "DEV-KAI"
+
+    ifinput("Enter your password: ") == password:
+
+    selected_word = input("Enter the word you want to be assigned as the target word: ")
+
+    cheat = True # So we dont go uploading dev stuff to the scoreboard
+
+    get_user_input(selected_word, cheat, config, MAX_TRIES)
+```
+
+
+
 Choose a random word from `target_words.txt`
 
 ```python

@@ -6615,6 +6615,7 @@ machs
 macks
 macle
 macon
+macOS
 macro
 madam
 madge
