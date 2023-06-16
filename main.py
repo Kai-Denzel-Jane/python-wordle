@@ -17,6 +17,7 @@ GREEN = Fore.GREEN
 LIGHT_GREEN = Fore.LIGHTGREEN_EX
 YELLOW = Fore.YELLOW
 WHITE = Fore.WHITE
+MAGENTA = Fore.MAGENTA
 
 # Loads the configuration file
 with open("config.yaml", "r") as config_file:
@@ -89,11 +90,11 @@ def algorithm(user_word, selected_word, tries, config, cheat):
     # Some nice colours and printing of the output
     for position in range(len(output)):
         if output[position] == "X":
-            print(Fore.WHITE + user_word[position], Fore.GREEN, output[position])
+            print(WHITE + user_word[position], LIGHT_GREEN, output[position])
         elif output[position] == "*":
-            print(Fore.WHITE + user_word[position], Fore.YELLOW, output[position])
+            print(WHITE + user_word[position], YELLOW, output[position])
         else:
-            print(Fore.WHITE + user_word[position], Fore.RED, output[position])
+            print(WHITE + user_word[position], LIGHT_RED, output[position])
             
     # Determines if the user one or lost
     if user_word == selected_word:
@@ -102,21 +103,21 @@ def algorithm(user_word, selected_word, tries, config, cheat):
             tries = 1
 
         if cheat:
-            print(Fore.GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
+            print(LIGHT_GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
             tries = 0                               # Makes score 0 because of cheating
         else:
-            print(Fore.GREEN + "You win", Style.RESET_ALL)
+            print(LIGHT_GREEN + "You win", Style.RESET_ALL)
 
         if config.get("upload_score", False) and tries != 0:
             client.info_input(tries_remaining = tries) # If configuration is set to true attempt to upload scores
     else:
         tries -= 1  # Decrease the tries counter
         if tries > 0:
-            print(Fore.MAGENTA + "Try again")
-            print(tries, "Tries remaining")
+            print(RED + "Try again", Style.RESET_ALL)
+            print(YELLOW, tries, "Tries remaining", Style.RESET_ALL)
             get_user_input(selected_word, cheat, config, tries)  # Indicate the need for another input
         else:
-            print(Fore.RED + "You lose")
+            print(LIGHT_RED + "You lose", Style.RESET_ALL)
             if config.get("show_word_after_loss", False):
                 print("The word was:", " ".join(selected_word)) # If configuration set to true show what the correct word was
 
@@ -135,21 +136,21 @@ def get_user_input(selected_word, cheat, config, tries):
         if user_word in valid_words_contents:
             return algorithm(user_word, selected_word, tries, config, cheat)
         else:
-            print(Fore.RED + "Invalid word")
+            print(LIGHT_RED + "Invalid word", Style.RESET_ALL)
             get_user_input(selected_word, cheat, config, tries)
     else:
-        print(Fore.RED + "Must be a 5 letter word. Try again.")
+        print(LIGHT_RED + "Must be a 5 letter word. Try again.", Style.RESET_ALL)
         get_user_input(selected_word, cheat, config, tries)
 
 def end():
     # Prompt the user to end the program
-    end = input(Style.BRIGHT + CYAN + "End " + CYAN + "[" + Fore.LIGHTGREEN_EX + "y" + CYAN + "/" + Fore.LIGHTRED_EX + "n" + CYAN + "]? " + Style.RESET_ALL)
+    end_input = input(Style.BRIGHT + CYAN + "End " + CYAN + "[" + LIGHT_GREEN + "y" + CYAN + "/" + LIGHT_RED + "n" + CYAN + "]? " + Style.RESET_ALL)
     if end.lower() == "yes" or end.lower() == "y":
         exit()
     elif end.lower() == "no" or end.lower() == "n":
         return
     else:
-        print(Fore.RED + "Invalid choice. Please enter 'y' or 'n'")
+        print(LIGHT_RED + "Invalid choice. Please enter 'y' or 'n'")
         end()
 
 
@@ -213,7 +214,7 @@ while True:
                 continue
         case 6:
             exit()
-        case 0: # REMOVE THIS CASE 
+        case 0: # REMOVE THIS CASE IN MAIN BRANCH COMMITS
             print(ORANGE, "DEV MODE, this is a development mode, only to be used for testing purposes.")
             password = "DEV-KAI"
 

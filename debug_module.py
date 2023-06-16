@@ -1,5 +1,5 @@
 import platform
-import plistlib
+import plistlib # Used to read the system version information for macOS
 from colorama import Fore, Style
 
 
