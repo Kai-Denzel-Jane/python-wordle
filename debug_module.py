@@ -75,7 +75,9 @@ def debug(welcome_func):
         print(Fore.YELLOW + debug_info[index])
     elif debug_info_input == "BACK":
         # Go back to the welcome menu
-        welcome_func()
+        import main
+
+        main.welcome()
 
     # Prompt the user to continue or exit
     input_choice = input(Fore.CYAN + "Do you want to continue? (y/n): " + Style.RESET_ALL)

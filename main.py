@@ -22,28 +22,51 @@ WHITE = Fore.WHITE
 with open("config.yaml", "r") as config_file:
         config = yaml.safe_load(config_file)
 
-# Main Menu 
 # Main Menu
 def welcome(cheat):
-    print(ORANGE + "1. " + CYAN + "Play the game")
-    print(ORANGE + "2. " + CYAN + "Instructions")
-    print(ORANGE + "3. " + CYAN + "Debug")
-    print(ORANGE + "4. " + CYAN + "Options")
-    print(ORANGE + "5. " + CYAN + "Credits / Information")
-    print(ORANGE + "6. " + CYAN + "Exit")
+    """This function is the main menu of the game. It asks the user to choose what they want to do.
+    
+        Parameters:
+            cheat (bool): Whether or not to load the game in cheat mode.
+
+        Returns:
+            choice (int): The number of the option chosen by the user.    
+    """
+    print(ORANGE + f"1. " + CYAN + f"Play the game")
+    print(ORANGE + f"2. " + CYAN + f"Instructions")
+    print(ORANGE + f"3. " + CYAN + f"Debug")
+    print(ORANGE + f"4. " + CYAN + f"Options")
+    print(ORANGE + f"5. " + CYAN + f"Credits / Information")
+    print(ORANGE + f"6. " + CYAN + f"Exit")
     print(Style.RESET_ALL)
 
-    choice = int(input("Input number: "))
-    return choice
+    choice = input("Input number: ")
 
-TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')         # Words that can possibly be chosen as the word yoh are guessing 
+    try:
+        choice = int(choice)
+        return choice
+    except:
+        print(RED + f"I clearly said number, and you didn't enter a number, try again.")
+        welcome(cheat)
+
+    
+
+TARGET_WORDS = pathlib.Path('./word-bank/target_words.txt')         # Words that can possibly be chosen as the word you are guessing 
 VALID_WORDS = pathlib.Path('./word-bank/all_words.txt')             # Words that can be guessed 
 
-MAX_TRIES = 6                                                       # Amount of lives user has doesn't really need to be a constant 
+MAX_TRIES = 6                                                       # Amount of tries user has doesn't really need to be a constant 
 
 # Loads necessary files
 def load_files():
+    """Loads necessary files to run the game
+
+        Parameters:
+            None
     
+        Returns:
+            target_words_contents (list): List of words that can possibly be chosen as the word you.
+            valid_words_contents (list): List of words that can be guessed.
+        """ 
     target_words_contents = []
     valid_words_contents = []
 
@@ -51,25 +74,47 @@ def load_files():
         with open(TARGET_WORDS, "r") as words:
             target_words_contents = words.read().splitlines()
     else:
-        print("The", TARGET_WORDS, "file required to run the game cant be found")
+        print(f"The", TARGET_WORDS, f"file required to run the game cant be found")
     
 
     if VALID_WORDS.exists():
         with open(VALID_WORDS, "r") as valid_words:
             valid_words_contents = valid_words.read().splitlines()
     else:
-        print("The", VALID_WORDS, "file required to run the game cant be found")
+        print(f"The", VALID_WORDS, f"file required to run the game cant be found")
 
     return target_words_contents, valid_words_contents
 
 # Select a random word from the target words
 def select_word():
+    """Select a random word from the target words
+    
+    
+    Parameters:
+        None
+    
+    Returns:
+        selected_word (str): The selected word
+    """
     target_words_contents = load_files()[0]
     selected_word = random.choice(target_words_contents)
     return selected_word
 
 # Main logic, this is where the scoring is implemented 
 def algorithm(user_word, selected_word, tries, config, cheat):
+    """Main logic, this is where the scoring is implemented 
+    
+    
+    Parameters:
+        user_word (str): The word the user is guessing
+        selected_word (str): The word that the user is guessing
+        tries (int): The amount of tries the user has
+        config (dict): The configuration file
+        cheat (bool): Whether or not to load the game in cheat mode.
+    
+    Returns:
+        None    
+    """
     user_word = list(map(str.upper, user_word))
     selected_word = list(map(str.upper, selected_word))
 
@@ -96,9 +141,9 @@ def algorithm(user_word, selected_word, tries, config, cheat):
 
     # Some nice colors and printing of the output
     for position in range(len(output)):
-        if output[position] == "X":
+        if output[position] == f"X":
             print(Fore.WHITE + user_word[position], Fore.GREEN, output[position])
-        elif output[position] == "*":
+        elif output[position] == f"*":
             print(Fore.WHITE + user_word[position], Fore.YELLOW, output[position])
         else:
             print(Fore.WHITE + user_word[position], Fore.RED, output[position])
@@ -106,36 +151,47 @@ def algorithm(user_word, selected_word, tries, config, cheat):
     # Determines if the user won or lost
     if user_word == selected_word:
         if tries == 1:
-            print("You won with one try remaining. That was close!")
+            print(f"You won with one try remaining. That was close!")
             tries = 1
 
         if cheat:
-            print(Fore.GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
+            print(Fore.GREEN + f"You win, but you cheated so you don't deserve it", Style.RESET_ALL)
             tries = 0  # Makes score 0 because of cheating
         else:
-            print(Fore.GREEN + "You win", Style.RESET_ALL)
+            print(Fore.GREEN + f"You win", Style.RESET_ALL)
 
-        if config.get("upload_score", False) and tries != 0:
+        if config.get(f"upload_score", False) and tries != 0:
             client.info_input(tries_remaining=tries)  # If configuration is set to true, attempt to upload scores
     else:
         tries -= 1  # Decrease the tries counter
         if tries > 0:
-            print(Fore.MAGENTA + "Try again")
-            print(tries, "Tries remaining")
+            print(Fore.MAGENTA + f"Try again")
+            print(tries, f"Tries remaining")
             get_user_input(selected_word, cheat, config, tries)  # Indicate the need for another input
         else:
-            print(Fore.RED + "You lose")
-            if config.get("show_word_after_loss", False):
-                print("The word was:", " ".join(selected_word))  # If configuration set to true, show what the correct word was
+            print(Fore.RED + "fYou lose")
+            if config.get(f"show_word_after_loss", False):
+                print(f"The word was:", " ".join(selected_word))  # If configuration set to true, show what the correct word was
 
 
 # User Input
 def get_user_input(selected_word, cheat, config, tries):
-    if cheat:
-        print("Word:", selected_word)
-        print("What's the fun in this") # Shows user is cheating 
+    """User Input
+    
+        Parameters:
+            selected_word (str): The word that the user is guessing
+            cheat (bool): Whether or not to load the game in cheat mode.
+            config (dict): The configuration file
+            tries (int): The amount of tries the user has
 
-    user_word = input(CYAN + "Enter a 5-letter word: " + Style.RESET_ALL) # Asks for user input 
+        Returns:
+            algorithm (function): The function that will be used to run the algorithm    
+        """
+    if cheat:
+        print(f"Word:", selected_word)
+        print(f"What's the fun in this") # Shows user is cheating 
+
+    user_word = input(CYAN + f"Enter a 5-letter word: " + Style.RESET_ALL) # Asks for user input 
     user_word = user_word.lower() # Makes users input lowercase 
 
     valid_words_contents = load_files()[1] # Calls the valid words from the returned tuple from the load_files function
@@ -144,25 +200,33 @@ def get_user_input(selected_word, cheat, config, tries):
         if user_word in valid_words_contents:
             return algorithm(user_word, selected_word, tries, config, cheat)
         else:
-            print(Fore.RED + "Invalid word")
+            print(Fore.RED + f"Invalid word")
             get_user_input(selected_word, cheat, config, tries)
     else:
-        print(Fore.RED + "Must be a 5 letter word. Try again.")
+        print(Fore.RED + f"Must be a 5 letter word. Try again.")
         get_user_input(selected_word, cheat, config, tries)
 
 def end():
     # Prompt the user to end the program
-    stop = input(Style.BRIGHT + CYAN + "End " + CYAN + "[" + Fore.LIGHTGREEN_EX + "y" + CYAN + "/" + Fore.LIGHTRED_EX + "n" + CYAN + "]? " + Style.RESET_ALL)
+    stop = input(Style.BRIGHT + CYAN + f"End " + CYAN + f"[" + Fore.LIGHTGREEN_EX + f"y" + CYAN + f"/" + Fore.LIGHTRED_EX + f"n" + CYAN + f"]? " + Style.RESET_ALL)
     if stop.lower() == "yes" or stop.lower() == "y":
         exit()
     elif stop.lower() == "no" or stop.lower() == "n":
         return
     else:
-        print(Fore.RED + "Invalid choice. Please enter 'y' or 'n'")
+        print(Fore.RED + f"Invalid choice. Please enter 'y' or 'n'")
         end()
 
 
 def main(cheat):
+    """Function to run the game
+    
+    Parameters:
+        cheat (bool): Whether or not to load the game in cheat mode.
+
+    Returns:
+        None
+    """
     # Main game loop
     word = select_word()
     tries = MAX_TRIES
@@ -171,6 +235,14 @@ def main(cheat):
 
 
 def show_instructions():
+    """Function to show the instructions
+    
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
     file_path = 'Instructions.md'
     try:
         subprocess.run(['open', file_path])  # For macOS
@@ -181,7 +253,7 @@ def show_instructions():
             try:
                 subprocess.run(['start', file_path], shell=True)  # For Windows
             except FileNotFoundError:
-                print(LIGHT_RED,"Unable to open the instructions file. Please refer to the README for instructions.")
+                print(LIGHT_RED, f"Unable to open the instructions file. Please refer to the README for instructions.")
 
 
 credits = """
@@ -195,6 +267,14 @@ konami_code = b'VVAgVVAgRE9XTiBET1dOIExFRlQgUklHSFQgTEVGVCBSSUdIVCBCIEE='
 secret = base64.b64decode(konami_code)
 
 def check_konami_code(input_sequence):
+    """Check input sequence
+    
+    Parameters:
+        input_sequence (str): The input sequence
+    
+    Returns:
+        encoded_input (str): The encoded input sequence    
+    """
     encoded_input = base64.b64encode(input_sequence.encode())
     return encoded_input == konami_code
 
@@ -215,10 +295,10 @@ while True:
             config = options_module.options()
         case 5:
             print(YELLOW, credits)
-            credit_input = input(WHITE + "Enter to continue: ")
+            credit_input = input(WHITE + f"Enter to continue: ")
             if check_konami_code(credit_input):
                 cheat = True
-                print("Cheat Mode enabled. You're really cheating!")
+                print(f"Cheat Mode enabled. You're really cheating!")
                 continue
         case 6:
             exit()
