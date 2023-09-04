@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
-{%}
-
-{% if name %}
-  <h1>Hello {{ name }}!</h1>
-{% else %}
-  <h1>Hello, World!</h1>
-{% endif %}
-
-
-
-
+<html>
+<head>
+    <title>Welcome Screen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='welcome.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Your App</h1>
+    <p>Choose an option:</p>
+    <form method="POST" action="/option">
+        <button type="submit" name="choice" value="option1">Option 1</button>
+        <button type="submit" name="choice" value="option2">Option 2</button>
+        <button type="submit" name="choice" value="option3">Option 3</button>
+        <button type="submit" name="choice" value="option4">Option 4</button>
+        <button type="submit" name="choice" value="option5">Option 5</button>
+    </form>
+  </div>
+</body>
 </html>
