@@ -280,30 +280,32 @@ def check_konami_code(input_sequence):
 
 cheat = False
 
-while True:
-    # Main program loop
-    choice = welcome(cheat)
+if __name__ == "__main__":
 
-    match choice:
-        case 1:
-            main(cheat)
-        case 2:
-            show_instructions()
-        case 3:
-            continue_debug = debug_module.debug(welcome)
-        case 4:
-            config = options_module.options()
-        case 5:
-            print(YELLOW, credits)
-            credit_input = input(WHITE + f"Enter to continue: ")
-            if check_konami_code(credit_input):
-                cheat = True
-                print(f"Cheat Mode enabled. You're really cheating!")
-                continue
-        case 6:
-            exit()
-        
-    end()
+    while True:
+        # Main program loop
+        choice = welcome(cheat)
 
-    if KeyboardInterrupt:
-        cheat = False
+        match choice:
+            case 1:
+                main(cheat)
+            case 2:
+                show_instructions()
+            case 3:
+                continue_debug = debug_module.debug(welcome)
+            case 4:
+                config = options_module.options()
+            case 5:
+                print(YELLOW, credits)
+                credit_input = input(WHITE + f"Enter to continue: ")
+                if check_konami_code(credit_input):
+                    cheat = True
+                    print(f"Cheat Mode enabled. You're really cheating!")
+                    continue
+            case 6:
+                exit()
+            
+        end()
+
+        if KeyboardInterrupt:
+            cheat = False
