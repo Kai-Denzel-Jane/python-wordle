@@ -71,56 +71,58 @@ def select_word():
 
 # Main logic, this is where the scoring is implemented 
 def algorithm(user_word, selected_word, tries, config, cheat):
-    user_word = map(str.upper, user_word)
-    selected_word = map(str.upper, selected_word)
+    user_word = user_word.upper()
+    selected_word = selected_word.upper()
+    output = [" "] * len(selected_word)
+    matched_indices = []
 
-    user_word = list(user_word)
-    selected_word = list(selected_word)   
-    position = 0                                
-    output = [" "] * 5                              # Output list to show hints
+    for i, letter in enumerate(user_word):
+        if letter == selected_word[i]:
+            output[i] = "X"
+            matched_indices.append(i)
 
+    for i, letter in enumerate(user_word):
+        if output[i] != "X" and letter in selected_word:
+            if selected_word.count(letter) > user_word.count(letter):
+                output[i] = "-"
+            elif selected_word.count(letter) == 1 and letter not in output:
+                output[i] = "-"
+            else:
+                output[i] = "*"
+        elif output[i] != "X":
+            output[i] = "-"
 
-    for position in range(len(selected_word)):
-        if user_word[position] == selected_word[position]:
-            output[position] = "X"                  # Updates the output list at the position where the letter was both in the word and correct position 
-        elif user_word[position] in selected_word and selected_word.index(user_word[position]) != position:
-            output[position] = "*"                  # Updates the output list at the position where the letter is in the word but not that position 
+    for i, letter in enumerate(user_word):
+        if output[i] == "X":
+            print(Fore.WHITE + letter, Fore.GREEN, output[i])
+        elif output[i] == "*":
+            print(Fore.WHITE + letter, Fore.YELLOW, output[i])
         else:
-            output[position] = "-"                  # Updates the output list at the position indicating there's no occurrence of this letter in the selected word
+            print(Fore.WHITE + letter, Fore.RED, output[i])
 
-    # Some nice colours and printing of the output
-    for position in range(len(output)):
-        if output[position] == "X":
-            print(WHITE + user_word[position], LIGHT_GREEN, output[position])
-        elif output[position] == "*":
-            print(WHITE + user_word[position], YELLOW, output[position])
-        else:
-            print(WHITE + user_word[position], LIGHT_RED, output[position])
-            
-    # Determines if the user one or lost
     if user_word == selected_word:
         if tries == 1:
             print("You won with one try remaining. That was close!")
             tries = 1
 
         if cheat:
-            print(LIGHT_GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
-            tries = 0                               # Makes score 0 because of cheating
+            print(Fore.GREEN + "You win, but you cheated so you don't deserve it", Style.RESET_ALL)
+            tries = 0
         else:
-            print(LIGHT_GREEN + "You win", Style.RESET_ALL)
+            print(Fore.GREEN + "You win", Style.RESET_ALL)
 
         if config.get("upload_score", False) and tries != 0:
-            client.info_input(tries_remaining = tries) # If configuration is set to true attempt to upload scores
+            client.info_input(tries_remaining=tries)
     else:
-        tries -= 1  # Decrease the tries counter
+        tries -= 1
         if tries > 0:
-            print(RED + "Try again", Style.RESET_ALL)
-            print(YELLOW, tries, "Tries remaining", Style.RESET_ALL)
-            get_user_input(selected_word, cheat, config, tries)  # Indicate the need for another input
+            print(Fore.MAGENTA + "Try again")
+            print(tries, "Tries remaining")
+            get_user_input(selected_word, cheat, config, tries)
         else:
-            print(LIGHT_RED + "You lose", Style.RESET_ALL)
+            print(Fore.RED + "You lose")
             if config.get("show_word_after_loss", False):
-                print("The word was:", " ".join(selected_word)) # If configuration set to true show what the correct word was
+                print("The word was:", " ".join(selected_word))
 
 # User Input
 def get_user_input(selected_word, cheat, config, tries):
