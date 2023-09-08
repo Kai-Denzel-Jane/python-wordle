@@ -33,17 +33,19 @@ def process_option():
 def flask_select_word():
     word = session.get('word')
 
+    tries = MAX_TRIES
+
     if word is None:
         word = select_word()
         session['word'] = word
 
     # Check if there's a POST request
     if request.method == 'POST':
-        return user_input(word)  # If it's a POST request, redirect to the user_input function
+        return user_input(word, cheat=False, config={}, tries)  # If it's a POST request, redirect to the user_input function
 
     return render_template('game_main.html', word=word)  # If it's a GET request, render the template
 
-def user_input(word, cheat=False, config={}, tries):
+def user_input(word, cheat=False, config={}, tries=):
     # if cheat:
     #     # ...
 
