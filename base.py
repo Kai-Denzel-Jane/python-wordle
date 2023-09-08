@@ -43,7 +43,7 @@ def flask_select_word():
 
     return render_template('game_main.html', word=word)  # If it's a GET request, render the template
 
-def user_input(word, cheat=False, config={}, tries=6):
+def user_input(word, cheat=False, config={}, tries):
     # if cheat:
     #     # ...
 
@@ -130,7 +130,7 @@ def flask_algorithm(user_word, word, tries, config={}, cheat=False):
         if tries > 0:
             print(Fore.MAGENTA + f"Try again")
             print(tries, f"Tries remaining")
-            return render_template("game_main.html", word=word, tries_remaining=tries)  # Indicate the need for another input
+            return user_input(word, cheat=False, config={}, tries=tries)  # Indicate the need for another input
         else:
             print(Fore.RED + f"You lose")
             if config.get(f"show_word_after_loss", False):
