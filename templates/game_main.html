@@ -4,14 +4,15 @@
 
 <body>
     DEBUG: The word is: {{ word }}
-    Tries Remaining: {{ tries_remaining }}
+    Tries Remaining: {{ tries_left }}
     <form method="POST", action="/play">
         
         <input type="text" name="user_word"> <p>{{ error_message }}</p>
+        <input type="text" hidden>{{ tries_left }}</input>
 
 
 
-
+    </form>
 
 </body>
 
