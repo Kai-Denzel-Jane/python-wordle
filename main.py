@@ -1,7 +1,7 @@
 # Import modules 
 import random                                       # Used to generate random word 
 import pathlib                                      # Used to define file paths because pythons default method can be weird 
-import base64                                       # Used to endcode / decode strings
+import base64                                       # Used to encode / decode strings
 import subprocess                                   # Used to open default applications for markdown files 
 import debug_module                                 # File with debug functions
 import options_module                               # File with option functions to allow user to change 
